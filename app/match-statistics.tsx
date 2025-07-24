@@ -27,17 +27,25 @@ export default function MatchStatistics() {
   
   const matchTitle = `${team1Name} vs ${team2Name}`;
   
-  const handleDownloadCSV = () => {
+  const handleDownloadCSV = async () => {
     try {
       const csvContent = generateMatchCSV(match);
       const filename = `paddle_match_${match.date}_${team1Name}_vs_${team2Name}.csv`;
-      downloadCSV(csvContent, filename);
+      const success = await downloadCSV(csvContent, filename);
       
-      Alert.alert(
-        'CSV Export',
-        'Match data has been exported successfully!',
-        [{ text: 'OK' }]
-      );
+      if (success) {
+        Alert.alert(
+          'CSV Export',
+          'Match data has been exported successfully!',
+          [{ text: 'OK' }]
+        );
+      } else {
+        Alert.alert(
+          'Export Error',
+          'Failed to export match data. Please try again.',
+          [{ text: 'OK' }]
+        );
+      }
     } catch (error) {
       Alert.alert(
         'Export Error',

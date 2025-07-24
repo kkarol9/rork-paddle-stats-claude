@@ -1,5 +1,7 @@
 import { Match } from '@/types';
 import { Platform } from 'react-native';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 
 export function generateMatchCSV(match: Match): string {
   const headers = [
@@ -52,20 +54,39 @@ export function generateMatchCSV(match: Match): string {
   return csvContent;
 }
 
-export function downloadCSV(csvContent: string, filename: string) {
-  if (Platform.OS === 'web') {
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  } else {
-    // For mobile platforms, you would typically use expo-sharing or similar
-    console.log('CSV download not implemented for mobile platforms');
-    console.log('CSV Content:', csvContent);
+export async function downloadCSV(csvContent: string, filename: string): Promise<boolean> {
+  try {
+    if (Platform.OS === 'web') {
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return true;
+    } else {
+      // For mobile platforms, save to device and share
+      const fileUri = FileSystem.documentDirectory + filename;
+      await FileSystem.writeAsStringAsync(fileUri, csvContent, {
+        encoding: FileSystem.EncodingType.UTF8,
+      });
+      
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(fileUri, {
+          mimeType: 'text/csv',
+          dialogTitle: 'Save CSV file',
+        });
+        return true;
+      } else {
+        console.log('Sharing is not available on this platform');
+        return false;
+      }
+    }
+  } catch (error) {
+    console.error('Error downloading CSV:', error);
+    return false;
   }
 }
