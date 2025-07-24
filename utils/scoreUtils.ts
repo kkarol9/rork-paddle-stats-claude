@@ -1,9 +1,9 @@
-import { Score, ScoringSystem } from '@/types';
+import { Score, ScoringSystem, ThirdSetFormat } from '@/types';
 
 // Tennis scoring system: 0, 15, 30, 40, Game
 const pointsSequence = ['0', '15', '30', '40'];
 
-export function updateScore(score: Score, teamIndex: 0 | 1, scoringSystem: ScoringSystem = 'no-ad'): Score {
+export function updateScore(score: Score, teamIndex: 0 | 1, scoringSystem: ScoringSystem = 'no-ad', thirdSetFormat: ThirdSetFormat = 'regular'): Score {
   const newScore = { ...score };
   
   // Handle tiebreak scoring
@@ -20,7 +20,7 @@ export function updateScore(score: Score, teamIndex: 0 | 1, scoringSystem: Scori
       
       // Tiebreak won
       if (newScore.tiebreak.isFinalTiebreak) {
-        // Final tiebreak (3rd set)
+        // Final tiebreak (3rd set or super tiebreak)
         const sets = [...newScore.sets] as [number, number];
         sets[teamIndex]++;
         newScore.sets = sets;
@@ -33,13 +33,16 @@ export function updateScore(score: Score, teamIndex: 0 | 1, scoringSystem: Scori
         // Reset games for new set
         const games = [0, 0] as [number, number];
         
-        // Check if match is over or if we need a final tiebreak
+        // Check if match is over or if we need a final set/tiebreak
         if (sets[0] === 1 && sets[1] === 1) {
-          // Final tiebreak needed
-          newScore.tiebreak = {
-            points: [0, 0],
-            isFinalTiebreak: true
-          };
+          if (thirdSetFormat === 'super-tiebreak') {
+            // Super tiebreak needed (to 10 points)
+            newScore.tiebreak = {
+              points: [0, 0],
+              isFinalTiebreak: true
+            };
+          }
+          // If regular format, continue with normal games
         } else {
           newScore.tiebreak = undefined;
         }
@@ -73,7 +76,7 @@ export function updateScore(score: Score, teamIndex: 0 | 1, scoringSystem: Scori
       newScore.points = currentPoints;
       
       // Check if set is won or tiebreak needed
-      checkSetCompletion(newScore, teamIndex);
+      checkSetCompletion(newScore, teamIndex, thirdSetFormat);
     } else {
       // Advantage scoring - winner gets advantage
       const otherTeam = teamIndex === 0 ? 1 : 0;
@@ -97,7 +100,7 @@ export function updateScore(score: Score, teamIndex: 0 | 1, scoringSystem: Scori
       newScore.points = currentPoints;
       
       // Check if set is won or tiebreak needed
-      checkSetCompletion(newScore, teamIndex);
+      checkSetCompletion(newScore, teamIndex, thirdSetFormat);
     } else {
       // Other team scores, back to deuce
       currentPoints[0] = '40';
@@ -117,7 +120,7 @@ export function updateScore(score: Score, teamIndex: 0 | 1, scoringSystem: Scori
     newScore.points = currentPoints;
     
     // Check if set is won or tiebreak needed
-    checkSetCompletion(newScore, teamIndex);
+    checkSetCompletion(newScore, teamIndex, thirdSetFormat);
   } else {
     // Normal point progression
     const currentIndex = pointsSequence.indexOf(currentPoints[teamIndex]);
@@ -130,7 +133,7 @@ export function updateScore(score: Score, teamIndex: 0 | 1, scoringSystem: Scori
   return newScore;
 }
 
-function checkSetCompletion(score: Score, teamIndex: 0 | 1) {
+function checkSetCompletion(score: Score, teamIndex: 0 | 1, thirdSetFormat: ThirdSetFormat = 'regular') {
   const games = score.games;
   
   if (games[teamIndex] === 7) {
@@ -141,13 +144,16 @@ function checkSetCompletion(score: Score, teamIndex: 0 | 1) {
     // Reset games for new set
     score.games = [0, 0];
     
-    // Check if match is over or if we need a final tiebreak
+    // Check if match is over or if we need a final set/tiebreak
     if (sets[0] === 1 && sets[1] === 1) {
-      // Final tiebreak needed
-      score.tiebreak = {
-        points: [0, 0],
-        isFinalTiebreak: true
-      };
+      if (thirdSetFormat === 'super-tiebreak') {
+        // Super tiebreak needed (to 10 points)
+        score.tiebreak = {
+          points: [0, 0],
+          isFinalTiebreak: true
+        };
+      }
+      // If regular format, continue with normal games
     }
     
     score.sets = sets;
@@ -159,13 +165,16 @@ function checkSetCompletion(score: Score, teamIndex: 0 | 1) {
     // Reset games for new set
     score.games = [0, 0];
     
-    // Check if match is over or if we need a final tiebreak
+    // Check if match is over or if we need a final set/tiebreak
     if (sets[0] === 1 && sets[1] === 1) {
-      // Final tiebreak needed
-      score.tiebreak = {
-        points: [0, 0],
-        isFinalTiebreak: true
-      };
+      if (thirdSetFormat === 'super-tiebreak') {
+        // Super tiebreak needed (to 10 points)
+        score.tiebreak = {
+          points: [0, 0],
+          isFinalTiebreak: true
+        };
+      }
+      // If regular format, continue with normal games
     }
     
     score.sets = sets;
