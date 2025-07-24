@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert,
 import { useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
-import { Player, Team, ScoringSystem, ThirdSetFormat } from '@/types';
+import { Player, Team, ScoringSystem, ThirdSetFormat, StatisticsType } from '@/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { UserRound, Users, MapPin, Trophy, AlertCircle, Target, Zap } from 'lucide-react-native';
+import { UserRound, Users, MapPin, Trophy, AlertCircle, Target, Zap, BarChart3 } from 'lucide-react-native';
 
 export default function NewMatch() {
   const router = useRouter();
@@ -19,6 +19,7 @@ export default function NewMatch() {
   const [round, setRound] = useState('');
   const [scoringSystem, setScoringSystem] = useState<ScoringSystem>('no-ad');
   const [thirdSetFormat, setThirdSetFormat] = useState<ThirdSetFormat>('regular');
+  const [statisticsType, setStatisticsType] = useState<StatisticsType>('basic');
   
   // Check if there's an unfinished match
   const hasUnfinishedMatch = currentMatch && !currentMatch.isCompleted;
@@ -68,7 +69,7 @@ export default function NewMatch() {
     ];
     
     // Create the match
-    createMatch(teams, location || 'Unknown Location', round || 'Friendly Match', scoringSystem, thirdSetFormat);
+    createMatch(teams, location || 'Unknown Location', round || 'Friendly Match', scoringSystem, thirdSetFormat, statisticsType);
     
     // Navigate to match tracking
     router.push('/match-tracking');
@@ -216,6 +217,43 @@ export default function NewMatch() {
                     thirdSetFormat === 'super-tiebreak' && styles.thirdSetOptionTextSelected
                   ]}>Super Tiebreak</Text>
                   <Text style={styles.thirdSetOptionDescription}>First to 10 points</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            
+            <View style={styles.statisticsContainer}>
+              <View style={styles.statisticsHeader}>
+                <BarChart3 size={20} color={colors.textLight} />
+                <Text style={styles.statisticsTitle}>Statistics</Text>
+              </View>
+              
+              <View style={styles.statisticsOptions}>
+                <TouchableOpacity 
+                  style={[
+                    styles.statisticsOption,
+                    statisticsType === 'basic' && styles.statisticsOptionSelected
+                  ]}
+                  onPress={() => setStatisticsType('basic')}
+                >
+                  <Text style={[
+                    styles.statisticsOptionText,
+                    statisticsType === 'basic' && styles.statisticsOptionTextSelected
+                  ]}>Basic</Text>
+                  <Text style={styles.statisticsOptionDescription}>Simple tracking</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity 
+                  style={[
+                    styles.statisticsOption,
+                    statisticsType === 'advanced' && styles.statisticsOptionSelected
+                  ]}
+                  onPress={() => setStatisticsType('advanced')}
+                >
+                  <Text style={[
+                    styles.statisticsOptionText,
+                    statisticsType === 'advanced' && styles.statisticsOptionTextSelected
+                  ]}>Advanced</Text>
+                  <Text style={styles.statisticsOptionDescription}>With rally description</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -528,6 +566,49 @@ const styles = StyleSheet.create({
     color: colors.secondary,
   },
   thirdSetOptionDescription: {
+    fontSize: 12,
+    color: colors.textLight,
+  },
+  statisticsContainer: {
+    marginTop: 16,
+  },
+  statisticsHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  statisticsTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text,
+    marginLeft: 8,
+  },
+  statisticsOptions: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  statisticsOption: {
+    flex: 1,
+    backgroundColor: colors.background,
+    borderRadius: 8,
+    padding: 12,
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  statisticsOptionSelected: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary + '10',
+  },
+  statisticsOptionText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.text,
+    marginBottom: 2,
+  },
+  statisticsOptionTextSelected: {
+    color: colors.primary,
+  },
+  statisticsOptionDescription: {
     fontSize: 12,
     color: colors.textLight,
   },

@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Match, Player, Team, MatchEvent, EventType, ShotType, ShotSpecification, ScoringSystem, ThirdSetFormat } from '@/types';
+import { Match, Player, Team, MatchEvent, EventType, ShotType, ShotSpecification, ScoringSystem, ThirdSetFormat, StatisticsType } from '@/types';
 import { getInitialScore, updateScore, isMatchCompleted, getWinner } from '@/utils/scoreUtils';
 
 interface MatchState {
   currentMatch: Match | null;
   matches: Match[];
-  createMatch: (teams: [Team, Team], location: string, round: string, scoringSystem: ScoringSystem, thirdSetFormat: ThirdSetFormat) => void;
+  createMatch: (teams: [Team, Team], location: string, round: string, scoringSystem: ScoringSystem, thirdSetFormat: ThirdSetFormat, statisticsType: StatisticsType) => void;
   addEvent: (playerId: string, eventType: EventType, shotType: ShotType, shotSpecification: ShotSpecification, description?: string) => void;
   undoLastEvent: () => void;
   updateMatchScore: (teamIndex: 0 | 1) => void;
@@ -21,7 +21,7 @@ export const useMatchStore = create<MatchState>()(
       currentMatch: null,
       matches: [],
       
-      createMatch: (teams: [Team, Team], location: string, round: string, scoringSystem: ScoringSystem, thirdSetFormat: ThirdSetFormat) => {
+      createMatch: (teams: [Team, Team], location: string, round: string, scoringSystem: ScoringSystem, thirdSetFormat: ThirdSetFormat, statisticsType: StatisticsType) => {
         const newMatch: Match = {
           id: Date.now().toString(),
           date: Date.now(),
@@ -32,6 +32,7 @@ export const useMatchStore = create<MatchState>()(
           score: getInitialScore(),
           scoringSystem,
           thirdSetFormat,
+          statisticsType,
           isCompleted: false,
         };
         

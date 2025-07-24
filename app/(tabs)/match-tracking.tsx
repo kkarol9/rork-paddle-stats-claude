@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, FlatList, ScrollView } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
@@ -26,12 +26,28 @@ export default function MatchTracking() {
   const flatListRef = useRef<FlatList>(null);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   
+  const resetModalState = useCallback(() => {
+    setSelectedEventType(null);
+    setSelectedPlayerId(null);
+    setSelectedShotType(null);
+    setSelectedShotSpecification(null);
+  }, []);
+  
   // Check if there's no current match or match is completed
   useEffect(() => {
     if (!currentMatch || currentMatch.isCompleted) {
       router.replace('/new-match');
     }
   }, [currentMatch, router]);
+  
+  // Auto-complete for basic statistics mode
+  useEffect(() => {
+    if (selectedEventType && selectedPlayerId && selectedShotType && selectedShotSpecification && currentMatch && currentMatch.statisticsType === 'basic') {
+      addEvent(selectedPlayerId, selectedEventType, selectedShotType, selectedShotSpecification, '');
+      setModalVisible(false);
+      resetModalState();
+    }
+  }, [selectedEventType, selectedPlayerId, selectedShotType, selectedShotSpecification, currentMatch, addEvent, resetModalState]);
   
   if (!currentMatch || currentMatch.isCompleted) {
     return null;
@@ -60,13 +76,6 @@ export default function MatchTracking() {
       setModalVisible(false);
       resetModalState();
     }
-  };
-
-  const resetModalState = () => {
-    setSelectedEventType(null);
-    setSelectedPlayerId(null);
-    setSelectedShotType(null);
-    setSelectedShotSpecification(null);
   };
 
   const handleUndo = () => {
@@ -124,8 +133,10 @@ export default function MatchTracking() {
       return `Who made the ${selectedEventType?.replace('_', ' ')}?`;
     } else if (!selectedShotType || !selectedShotSpecification) {
       return "What type of shot was it?";
-    } else {
+    } else if (currentMatch.statisticsType === 'advanced') {
       return "Add description (optional)";
+    } else {
+      return "Basic statistics mode";
     }
   };
   
@@ -225,7 +236,7 @@ export default function MatchTracking() {
                   onBack={() => setSelectedPlayerId(null)}
                   title={getModalTitle()}
                 />
-              ) : (
+              ) : currentMatch.statisticsType === 'advanced' ? (
                 <EventDescriptionInput
                   onComplete={handleDescriptionComplete}
                   onBack={() => {
@@ -234,6 +245,11 @@ export default function MatchTracking() {
                   }}
                   title={getModalTitle()}
                 />
+              ) : (
+                // For basic statistics, show a simple completion message
+                <View style={styles.basicStatsContainer}>
+                  <Text style={styles.basicStatsText}>Event recorded successfully!</Text>
+                </View>
               )}
             </View>
           </View>
@@ -355,5 +371,14 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     padding: 8,
     marginBottom: 8,
+  },
+  basicStatsContainer: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  basicStatsText: {
+    fontSize: 16,
+    color: colors.text,
+    textAlign: 'center',
   },
 });

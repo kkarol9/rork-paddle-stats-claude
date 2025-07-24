@@ -13,6 +13,7 @@ export type ShotType = 'smash' | 'volley' | 'groundstroke' | 'lob' | 'return' | 
 export type ShotSpecification = 'vibora' | 'smash' | 'forehand' | 'backhand';
 export type ScoringSystem = 'no-ad' | 'ad';
 export type ThirdSetFormat = 'regular' | 'super-tiebreak';
+export type StatisticsType = 'basic' | 'advanced';
 
 export type MatchEvent = {
   id: string;
@@ -45,6 +46,7 @@ export type Match = {
   score: Score;
   scoringSystem: ScoringSystem;
   thirdSetFormat: ThirdSetFormat;
+  statisticsType: StatisticsType;
   isCompleted: boolean;
   winner?: 0 | 1; // Index of winning team
 };
