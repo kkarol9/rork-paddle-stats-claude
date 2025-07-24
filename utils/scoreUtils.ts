@@ -1,9 +1,9 @@
-import { Score } from '@/types';
+import { Score, ScoringSystem } from '@/types';
 
 // Tennis scoring system: 0, 15, 30, 40, Game
 const pointsSequence = ['0', '15', '30', '40'];
 
-export function updateScore(score: Score, teamIndex: 0 | 1): Score {
+export function updateScore(score: Score, teamIndex: 0 | 1, scoringSystem: ScoringSystem = 'no-ad'): Score {
   const newScore = { ...score };
   
   // Handle tiebreak scoring
@@ -58,64 +58,52 @@ export function updateScore(score: Score, teamIndex: 0 | 1): Score {
   // Regular game scoring
   const currentPoints = [...newScore.points] as [string, string];
   
-  // Handle golden point at 40-40 (deuce)
+  // Handle deuce situation (40-40)
   if (currentPoints[0] === '40' && currentPoints[1] === '40') {
-    // Golden point - winner gets the game
-    const games = [...newScore.games] as [number, number];
-    games[teamIndex]++;
-    
-    // Reset points for new game
-    currentPoints[0] = '0';
-    currentPoints[1] = '0';
-    
-    // Check if set is won or tiebreak needed
-    if (games[teamIndex] === 7) {
-      // Set won with 7-5 or 7-6
-      const sets = [...newScore.sets] as [number, number];
-      sets[teamIndex]++;
+    if (scoringSystem === 'no-ad') {
+      // Golden point - winner gets the game
+      const games = [...newScore.games] as [number, number];
+      games[teamIndex]++;
       
-      // Reset games for new set
-      games[0] = 0;
-      games[1] = 0;
+      // Reset points for new game
+      currentPoints[0] = '0';
+      currentPoints[1] = '0';
       
-      // Check if match is over or if we need a final tiebreak
-      if (sets[0] === 1 && sets[1] === 1) {
-        // Final tiebreak needed
-        newScore.tiebreak = {
-          points: [0, 0],
-          isFinalTiebreak: true
-        };
-      }
+      newScore.games = games;
+      newScore.points = currentPoints;
       
-      newScore.sets = sets;
-    } else if (games[teamIndex] === 6 && games[1 - teamIndex] <= 4) {
-      // Set won with 6-4 or better
-      const sets = [...newScore.sets] as [number, number];
-      sets[teamIndex]++;
-      
-      // Reset games for new set
-      games[0] = 0;
-      games[1] = 0;
-      
-      // Check if match is over or if we need a final tiebreak
-      if (sets[0] === 1 && sets[1] === 1) {
-        // Final tiebreak needed
-        newScore.tiebreak = {
-          points: [0, 0],
-          isFinalTiebreak: true
-        };
-      }
-      
-      newScore.sets = sets;
-    } else if (games[teamIndex] === 6 && games[1 - teamIndex] === 6) {
-      // Tiebreak needed at 6-6
-      newScore.tiebreak = {
-        points: [0, 0],
-        isFinalTiebreak: false
-      };
+      // Check if set is won or tiebreak needed
+      checkSetCompletion(newScore, teamIndex);
+    } else {
+      // Advantage scoring - winner gets advantage
+      const otherTeam = teamIndex === 0 ? 1 : 0;
+      currentPoints[teamIndex] = 'Ad';
+      currentPoints[otherTeam] = '40';
+      newScore.points = currentPoints;
+      return newScore;
     }
-    
-    newScore.games = games;
+  } else if (currentPoints[0] === 'Ad' || currentPoints[1] === 'Ad') {
+    // Handle advantage situations
+    if (currentPoints[teamIndex] === 'Ad') {
+      // Team with advantage wins the game
+      const games = [...newScore.games] as [number, number];
+      games[teamIndex]++;
+      
+      // Reset points for new game
+      currentPoints[0] = '0';
+      currentPoints[1] = '0';
+      
+      newScore.games = games;
+      newScore.points = currentPoints;
+      
+      // Check if set is won or tiebreak needed
+      checkSetCompletion(newScore, teamIndex);
+    } else {
+      // Other team scores, back to deuce
+      currentPoints[0] = '40';
+      currentPoints[1] = '40';
+      newScore.points = currentPoints;
+    }
   } else if (currentPoints[teamIndex] === '40') {
     // Game won
     const games = [...newScore.games] as [number, number];
@@ -125,64 +113,69 @@ export function updateScore(score: Score, teamIndex: 0 | 1): Score {
     currentPoints[0] = '0';
     currentPoints[1] = '0';
     
-    // Check if set is won or tiebreak needed
-    if (games[teamIndex] === 7) {
-      // Set won with 7-5 or 7-6
-      const sets = [...newScore.sets] as [number, number];
-      sets[teamIndex]++;
-      
-      // Reset games for new set
-      games[0] = 0;
-      games[1] = 0;
-      
-      // Check if match is over or if we need a final tiebreak
-      if (sets[0] === 1 && sets[1] === 1) {
-        // Final tiebreak needed
-        newScore.tiebreak = {
-          points: [0, 0],
-          isFinalTiebreak: true
-        };
-      }
-      
-      newScore.sets = sets;
-    } else if (games[teamIndex] === 6 && games[1 - teamIndex] <= 4) {
-      // Set won with 6-4 or better
-      const sets = [...newScore.sets] as [number, number];
-      sets[teamIndex]++;
-      
-      // Reset games for new set
-      games[0] = 0;
-      games[1] = 0;
-      
-      // Check if match is over or if we need a final tiebreak
-      if (sets[0] === 1 && sets[1] === 1) {
-        // Final tiebreak needed
-        newScore.tiebreak = {
-          points: [0, 0],
-          isFinalTiebreak: true
-        };
-      }
-      
-      newScore.sets = sets;
-    } else if (games[teamIndex] === 6 && games[1 - teamIndex] === 6) {
-      // Tiebreak needed at 6-6
-      newScore.tiebreak = {
-        points: [0, 0],
-        isFinalTiebreak: false
-      };
-    }
-    
     newScore.games = games;
+    newScore.points = currentPoints;
+    
+    // Check if set is won or tiebreak needed
+    checkSetCompletion(newScore, teamIndex);
   } else {
     // Normal point progression
     const currentIndex = pointsSequence.indexOf(currentPoints[teamIndex]);
     if (currentIndex < pointsSequence.length - 1) {
       currentPoints[teamIndex] = pointsSequence[currentIndex + 1];
     }
+    newScore.points = currentPoints;
   }
   
-  newScore.points = currentPoints;
   return newScore;
+}
+
+function checkSetCompletion(score: Score, teamIndex: 0 | 1) {
+  const games = score.games;
+  
+  if (games[teamIndex] === 7) {
+    // Set won with 7-5 or 7-6
+    const sets = [...score.sets] as [number, number];
+    sets[teamIndex]++;
+    
+    // Reset games for new set
+    score.games = [0, 0];
+    
+    // Check if match is over or if we need a final tiebreak
+    if (sets[0] === 1 && sets[1] === 1) {
+      // Final tiebreak needed
+      score.tiebreak = {
+        points: [0, 0],
+        isFinalTiebreak: true
+      };
+    }
+    
+    score.sets = sets;
+  } else if (games[teamIndex] === 6 && games[1 - teamIndex] <= 4) {
+    // Set won with 6-4 or better
+    const sets = [...score.sets] as [number, number];
+    sets[teamIndex]++;
+    
+    // Reset games for new set
+    score.games = [0, 0];
+    
+    // Check if match is over or if we need a final tiebreak
+    if (sets[0] === 1 && sets[1] === 1) {
+      // Final tiebreak needed
+      score.tiebreak = {
+        points: [0, 0],
+        isFinalTiebreak: true
+      };
+    }
+    
+    score.sets = sets;
+  } else if (games[teamIndex] === 6 && games[1 - teamIndex] === 6) {
+    // Tiebreak needed at 6-6
+    score.tiebreak = {
+      points: [0, 0],
+      isFinalTiebreak: false
+    };
+  }
 }
 
 export function isMatchCompleted(score: Score): boolean {

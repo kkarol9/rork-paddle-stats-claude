@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Match, Player, Team, MatchEvent, EventType, ShotType, ShotSpecification } from '@/types';
+import { Match, Player, Team, MatchEvent, EventType, ShotType, ShotSpecification, ScoringSystem } from '@/types';
 import { getInitialScore, updateScore, isMatchCompleted, getWinner } from '@/utils/scoreUtils';
 
 interface MatchState {
   currentMatch: Match | null;
   matches: Match[];
-  createMatch: (teams: [Team, Team], location: string, round: string) => void;
+  createMatch: (teams: [Team, Team], location: string, round: string, scoringSystem: ScoringSystem) => void;
   addEvent: (playerId: string, eventType: EventType, shotType: ShotType, shotSpecification: ShotSpecification, description?: string) => void;
   undoLastEvent: () => void;
   updateMatchScore: (teamIndex: 0 | 1) => void;
@@ -21,7 +21,7 @@ export const useMatchStore = create<MatchState>()(
       currentMatch: null,
       matches: [],
       
-      createMatch: (teams: [Team, Team], location: string, round: string) => {
+      createMatch: (teams: [Team, Team], location: string, round: string, scoringSystem: ScoringSystem) => {
         const newMatch: Match = {
           id: Date.now().toString(),
           date: Date.now(),
@@ -30,6 +30,7 @@ export const useMatchStore = create<MatchState>()(
           teams,
           events: [],
           score: getInitialScore(),
+          scoringSystem,
           isCompleted: false,
         };
         
@@ -72,7 +73,7 @@ export const useMatchStore = create<MatchState>()(
             ...state.currentMatch!,
             events: [...state.currentMatch!.events, newEvent],
             score: scoringTeamIndex !== null 
-              ? updateScore(state.currentMatch!.score, scoringTeamIndex)
+              ? updateScore(state.currentMatch!.score, scoringTeamIndex, state.currentMatch!.scoringSystem)
               : state.currentMatch!.score,
           }
         }));
@@ -111,7 +112,7 @@ export const useMatchStore = create<MatchState>()(
           }
           
           if (scoringTeamIndex !== null) {
-            newScore = updateScore(newScore, scoringTeamIndex);
+            newScore = updateScore(newScore, scoringTeamIndex, currentMatch.scoringSystem);
           }
         }
 
@@ -133,7 +134,7 @@ export const useMatchStore = create<MatchState>()(
         set(state => ({
           currentMatch: {
             ...state.currentMatch!,
-            score: updateScore(state.currentMatch!.score, teamIndex),
+            score: updateScore(state.currentMatch!.score, teamIndex, state.currentMatch!.scoringSystem),
           }
         }));
         

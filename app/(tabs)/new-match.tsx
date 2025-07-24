@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert,
 import { useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
-import { Player, Team } from '@/types';
+import { Player, Team, ScoringSystem } from '@/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { UserRound, Users, MapPin, Trophy, AlertCircle } from 'lucide-react-native';
+import { UserRound, Users, MapPin, Trophy, AlertCircle, Target } from 'lucide-react-native';
 
 export default function NewMatch() {
   const router = useRouter();
@@ -17,6 +17,7 @@ export default function NewMatch() {
   const [team2Player2, setTeam2Player2] = useState('');
   const [location, setLocation] = useState('');
   const [round, setRound] = useState('');
+  const [scoringSystem, setScoringSystem] = useState<ScoringSystem>('no-ad');
   
   // Check if there's an unfinished match
   const hasUnfinishedMatch = currentMatch && !currentMatch.isCompleted;
@@ -66,7 +67,7 @@ export default function NewMatch() {
     ];
     
     // Create the match
-    createMatch(teams, location || 'Unknown Location', round || 'Friendly Match');
+    createMatch(teams, location || 'Unknown Location', round || 'Friendly Match', scoringSystem);
     
     // Navigate to match tracking
     router.push('/match-tracking');
@@ -142,6 +143,43 @@ export default function NewMatch() {
                 onChangeText={setRound}
                 placeholderTextColor={colors.textLight}
               />
+            </View>
+            
+            <View style={styles.scoringSystemContainer}>
+              <View style={styles.scoringSystemHeader}>
+                <Target size={20} color={colors.textLight} />
+                <Text style={styles.scoringSystemTitle}>Scoring System</Text>
+              </View>
+              
+              <View style={styles.scoringOptions}>
+                <TouchableOpacity 
+                  style={[
+                    styles.scoringOption,
+                    scoringSystem === 'no-ad' && styles.scoringOptionSelected
+                  ]}
+                  onPress={() => setScoringSystem('no-ad')}
+                >
+                  <Text style={[
+                    styles.scoringOptionText,
+                    scoringSystem === 'no-ad' && styles.scoringOptionTextSelected
+                  ]}>No-Ad Scoring</Text>
+                  <Text style={styles.scoringOptionDescription}>Golden Point</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity 
+                  style={[
+                    styles.scoringOption,
+                    scoringSystem === 'ad' && styles.scoringOptionSelected
+                  ]}
+                  onPress={() => setScoringSystem('ad')}
+                >
+                  <Text style={[
+                    styles.scoringOptionText,
+                    scoringSystem === 'ad' && styles.scoringOptionTextSelected
+                  ]}>Ad Scoring</Text>
+                  <Text style={styles.scoringOptionDescription}>With Advantage</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
           
@@ -368,5 +406,48 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  scoringSystemContainer: {
+    marginTop: 8,
+  },
+  scoringSystemHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  scoringSystemTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text,
+    marginLeft: 8,
+  },
+  scoringOptions: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  scoringOption: {
+    flex: 1,
+    backgroundColor: colors.background,
+    borderRadius: 8,
+    padding: 12,
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  scoringOptionSelected: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary + '10',
+  },
+  scoringOptionText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.text,
+    marginBottom: 2,
+  },
+  scoringOptionTextSelected: {
+    color: colors.primary,
+  },
+  scoringOptionDescription: {
+    fontSize: 12,
+    color: colors.textLight,
   },
 });

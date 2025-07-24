@@ -11,6 +11,7 @@ export type Team = {
 export type EventType = 'unforced_error' | 'winner' | 'forced_error';
 export type ShotType = 'smash' | 'volley' | 'groundstroke' | 'lob' | 'return' | 'bajada' | 'other';
 export type ShotSpecification = 'vibora' | 'smash' | 'forehand' | 'backhand';
+export type ScoringSystem = 'no-ad' | 'ad';
 
 export type MatchEvent = {
   id: string;
@@ -41,6 +42,7 @@ export type Match = {
   teams: [Team, Team];
   events: MatchEvent[];
   score: Score;
+  scoringSystem: ScoringSystem;
   isCompleted: boolean;
   winner?: 0 | 1; // Index of winning team
 };
