@@ -54,14 +54,25 @@ export function generateMatchCSV(match: Match): string {
   return csvContent;
 }
 
+function sanitizeFilename(filename: string): string {
+  // Remove or replace invalid characters for file names
+  return filename
+    .replace(/[/\\:*?"<>|]/g, '_') // Replace invalid characters with underscore
+    .replace(/\s+/g, '_') // Replace spaces with underscore
+    .replace(/_+/g, '_') // Replace multiple underscores with single underscore
+    .replace(/^_|_$/g, ''); // Remove leading/trailing underscores
+}
+
 export async function downloadCSV(csvContent: string, filename: string): Promise<boolean> {
   try {
+    const sanitizedFilename = sanitizeFilename(filename);
+    
     if (Platform.OS === 'web') {
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
       link.setAttribute('href', url);
-      link.setAttribute('download', filename);
+      link.setAttribute('download', sanitizedFilename);
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
       link.click();
@@ -69,7 +80,7 @@ export async function downloadCSV(csvContent: string, filename: string): Promise
       return true;
     } else {
       // For mobile platforms, save to device and share
-      const fileUri = FileSystem.documentDirectory + filename;
+      const fileUri = FileSystem.documentDirectory + sanitizedFilename;
       await FileSystem.writeAsStringAsync(fileUri, csvContent, {
         encoding: FileSystem.EncodingType.UTF8,
       });
