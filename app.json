@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Paddle Stats Clone - linia",
+    "name": "Padel Stats",
     "slug": "paddle-stats-cyr9bodh",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -15,14 +15,14 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.rork.paddle-stats-cyr9bodh"
+      "bundleIdentifier": "com.karolkrawczynski.padelstats"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "app.rork.paddle-stats-cyr9bodh",
+      "package": "com.karolkrawczynski.padelstats",
       "permissions": [
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
