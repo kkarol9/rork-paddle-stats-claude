@@ -5,13 +5,13 @@ import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
 import ScoreDisplay from '@/components/ScoreDisplay';
 import StatisticsCard from '@/components/StatisticsCard';
-import { Download, MapPin, Trophy, ArrowLeft } from 'lucide-react-native';
+import { Download, MapPin, Trophy, ArrowLeft, Trash2 } from 'lucide-react-native';
 import { generateMatchCSV, downloadCSV } from '@/utils/csvExport';
 
 export default function MatchStatistics() {
   const router = useRouter();
   const { matchId } = useLocalSearchParams();
-  const { matches, currentMatch } = useMatchStore();
+  const { matches, currentMatch, deleteMatch } = useMatchStore();
   
   const match = matchId 
     ? matches.find(m => m.id === matchId) || currentMatch
@@ -58,6 +58,27 @@ export default function MatchStatistics() {
         [{ text: 'OK' }]
       );
     }
+  };
+  
+  const handleDeleteMatch = () => {
+    Alert.alert(
+      'Delete Match',
+      'Are you sure you want to delete this match? This action cannot be undone.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            deleteMatch(match.id);
+            router.push('/history');
+          },
+        },
+      ]
+    );
   };
   
   const handleBackToDashboard = () => {
@@ -167,6 +188,16 @@ export default function MatchStatistics() {
               <Download size={20} color="white" />
               <Text style={styles.downloadButtonText}>Download Match Data (CSV)</Text>
             </TouchableOpacity>
+            
+            {match.isCompleted && (
+              <TouchableOpacity 
+                style={styles.deleteButton}
+                onPress={handleDeleteMatch}
+              >
+                <Trash2 size={20} color="white" />
+                <Text style={styles.deleteButtonText}>Delete Match</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </ScrollView>
       </View>
@@ -271,6 +302,26 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   downloadButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
+  },
+  deleteButton: {
+    backgroundColor: '#dc3545',
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  deleteButtonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',

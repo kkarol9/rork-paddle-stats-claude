@@ -13,6 +13,7 @@ interface MatchState {
   updateMatchScore: (teamIndex: 0 | 1) => void;
   completeMatch: () => void;
   resetCurrentMatch: () => void;
+  deleteMatch: (matchId: string) => void;
 }
 
 export const useMatchStore = create<MatchState>()(
@@ -167,6 +168,13 @@ export const useMatchStore = create<MatchState>()(
       
       resetCurrentMatch: () => {
         set({ currentMatch: null });
+      },
+      
+      deleteMatch: (matchId: string) => {
+        set(state => ({
+          matches: state.matches.filter(match => match.id !== matchId),
+          currentMatch: state.currentMatch?.id === matchId ? null : state.currentMatch,
+        }));
       },
     }),
     {
