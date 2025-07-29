@@ -23,8 +23,8 @@ export default function Dashboard() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
       <View style={styles.header}>
-        <Text style={styles.title}>Paddle Match Stats</Text>
-        <Text style={styles.subtitle}>Track your paddle tennis statistics</Text>
+        <Text style={styles.title}>Padel Match Statistics</Text>
+        <Text style={styles.subtitle}>Track your padel stats</Text>
       </View>
       
       {currentMatch && !currentMatch.isCompleted ? (

@@ -11,6 +11,8 @@ export const shotTypes = [
 export const shotSpecifications = {
   smash: [
     { id: 'vibora', label: 'Vibora' },
+    { id: 'rulo', label: 'Rulo' },
+    { id: 'bandeja', label: 'Bandeja' },
     { id: 'smash', label: 'Smash' },
   ],
   other: [
