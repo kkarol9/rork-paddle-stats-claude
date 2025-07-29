@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
@@ -17,8 +17,13 @@ export default function MatchStatistics() {
     ? matches.find(m => m.id === matchId) || currentMatch
     : currentMatch;
   
+  useEffect(() => {
+    if (!match) {
+      router.replace('/');
+    }
+  }, [match, router]);
+  
   if (!match) {
-    router.replace('/');
     return null;
   }
   
