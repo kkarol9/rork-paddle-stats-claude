@@ -10,7 +10,7 @@ import PlayerSelector from '@/components/PlayerSelector';
 import ShotTypeSelector from '@/components/ShotTypeSelector';
 import EventDescriptionInput from '@/components/EventDescriptionInput';
 import PlayerStatsCard from '@/components/PlayerStatsCard';
-import { X, BarChart3, RotateCcw, Flag } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function MatchTracking() {
   const router = useRouter();
@@ -187,7 +187,7 @@ export default function MatchTracking() {
             style={styles.undoButton}
             onPress={handleUndo}
           >
-            <RotateCcw size={20} color="white" />
+            <Ionicons name="refresh" size={20} color="white" />
             <Text style={styles.undoButtonText}>Undo Last Point</Text>
           </TouchableOpacity>
 
@@ -195,7 +195,7 @@ export default function MatchTracking() {
             style={styles.viewStatsButton}
             onPress={handleViewStatistics}
           >
-            <BarChart3 size={20} color="white" />
+            <Ionicons name="bar-chart" size={20} color="white" />
             <Text style={styles.viewStatsButtonText}>View Statistics</Text>
           </TouchableOpacity>
 
@@ -203,7 +203,7 @@ export default function MatchTracking() {
             style={styles.endMatchButton}
             onPress={handleEndMatch}
           >
-            <Flag size={20} color={colors.error} />
+            <Ionicons name="flag" size={20} color={colors.error} />
             <Text style={styles.endMatchButtonText}>End Match</Text>
           </TouchableOpacity>
         </View>
@@ -220,7 +220,7 @@ export default function MatchTracking() {
                 style={styles.closeButton}
                 onPress={handleCloseModal}
               >
-                <X size={24} color={colors.text} />
+                <Ionicons name="close" size={24} color={colors.text} />
               </TouchableOpacity>
               
               {!selectedPlayerId ? (

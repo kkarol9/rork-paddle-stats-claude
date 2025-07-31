@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
 import { Match, Player } from '@/types';
-import { BarChart2, MapPin, Settings } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function MatchHistory() {
@@ -24,7 +24,7 @@ export default function MatchHistory() {
           {match.teams[0].players.map((p: Player) => p.name.split(' ')[0]).join('/')} vs {match.teams[1].players.map((p: Player) => p.name.split(' ')[0]).join('/')}
         </Text>
         <View style={styles.matchDetails}>
-          <MapPin size={14} color={colors.textLight} />
+          <Ionicons name="location" size={14} color={colors.textLight} />
           <Text style={styles.matchLocation}>{match.location}</Text>
           <Text style={styles.matchDate}>
             {new Date(match.date).toLocaleDateString()}
@@ -40,7 +40,7 @@ export default function MatchHistory() {
         ]}>
           {match.score.sets[0]}-{match.score.sets[1]}
         </Text>
-        <BarChart2 size={16} color={colors.primary} />
+        <Ionicons name="bar-chart" size={16} color={colors.primary} />
       </View>
     </TouchableOpacity>
   );
@@ -57,7 +57,7 @@ export default function MatchHistory() {
             style={styles.settingsButton}
             onPress={() => router.push('/settings')}
           >
-            <Settings size={24} color={colors.primary} />
+            <Ionicons name="settings" size={24} color={colors.primary} />
           </TouchableOpacity>
         </View>
       </View>

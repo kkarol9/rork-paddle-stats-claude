@@ -5,7 +5,7 @@ import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
 import { Player, Team, ScoringSystem, ThirdSetFormat, StatisticsType } from '@/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { UserRound, Users, MapPin, Trophy, AlertCircle, Target, Zap, BarChart3 } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function NewMatch() {
   const router = useRouter();
@@ -79,7 +79,7 @@ export default function NewMatch() {
     return (
       <SafeAreaView style={styles.container} edges={['bottom']}>
         <View style={styles.unfinishedMatchContainer}>
-          <AlertCircle size={64} color={colors.warning} />
+          <Ionicons name="alert-circle" size={64} color={colors.warning} />
           <Text style={styles.unfinishedTitle}>Unfinished Match</Text>
           <Text style={styles.unfinishedMessage}>
             You have an unfinished match in progress. Please complete it before starting a new one.
@@ -126,7 +126,7 @@ export default function NewMatch() {
             <Text style={styles.sectionTitle}>Match Details</Text>
             
             <View style={styles.inputContainer}>
-              <MapPin size={20} color={colors.textLight} style={styles.inputIcon} />
+              <Ionicons name="location" size={20} color={colors.textLight} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="Location (e.g. Club Name)"
@@ -137,7 +137,7 @@ export default function NewMatch() {
             </View>
             
             <View style={styles.inputContainer}>
-              <Trophy size={20} color={colors.textLight} style={styles.inputIcon} />
+              <Ionicons name="trophy" size={20} color={colors.textLight} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="Round (e.g. Finals, Semifinals)"
@@ -149,7 +149,7 @@ export default function NewMatch() {
             
             <View style={styles.scoringSystemContainer}>
               <View style={styles.scoringSystemHeader}>
-                <Target size={20} color={colors.textLight} />
+                <Ionicons name="target" size={20} color={colors.textLight} />
                 <Text style={styles.scoringSystemTitle}>Scoring System</Text>
               </View>
               
@@ -186,7 +186,7 @@ export default function NewMatch() {
             
             <View style={styles.thirdSetContainer}>
               <View style={styles.thirdSetHeader}>
-                <Zap size={20} color={colors.textLight} />
+                <Ionicons name="flash" size={20} color={colors.textLight} />
                 <Text style={styles.thirdSetTitle}>Third Set Format</Text>
               </View>
               
@@ -223,7 +223,7 @@ export default function NewMatch() {
             
             <View style={styles.statisticsContainer}>
               <View style={styles.statisticsHeader}>
-                <BarChart3 size={20} color={colors.textLight} />
+                <Ionicons name="bar-chart" size={20} color={colors.textLight} />
                 <Text style={styles.statisticsTitle}>Statistics</Text>
               </View>
               
@@ -261,12 +261,12 @@ export default function NewMatch() {
           
           <View style={styles.teamSection}>
             <View style={styles.teamHeader}>
-              <Users size={20} color={colors.primary} />
+              <Ionicons name="people" size={20} color={colors.primary} />
               <Text style={styles.teamTitle}>Team 1</Text>
             </View>
             
             <View style={styles.inputContainer}>
-              <UserRound size={20} color={colors.textLight} style={styles.inputIcon} />
+              <Ionicons name="person" size={20} color={colors.textLight} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="Player 1 Name"
@@ -277,7 +277,7 @@ export default function NewMatch() {
             </View>
             
             <View style={styles.inputContainer}>
-              <UserRound size={20} color={colors.textLight} style={styles.inputIcon} />
+              <Ionicons name="person" size={20} color={colors.textLight} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="Player 2 Name"
@@ -290,12 +290,12 @@ export default function NewMatch() {
           
           <View style={styles.teamSection}>
             <View style={styles.teamHeader}>
-              <Users size={20} color={colors.secondary} />
+              <Ionicons name="people" size={20} color={colors.secondary} />
               <Text style={styles.teamTitle}>Team 2</Text>
             </View>
             
             <View style={styles.inputContainer}>
-              <UserRound size={20} color={colors.textLight} style={styles.inputIcon} />
+              <Ionicons name="person" size={20} color={colors.textLight} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="Player 1 Name"
@@ -306,7 +306,7 @@ export default function NewMatch() {
             </View>
             
             <View style={styles.inputContainer}>
-              <UserRound size={20} color={colors.textLight} style={styles.inputIcon} />
+              <Ionicons name="person" size={20} color={colors.textLight} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="Player 2 Name"

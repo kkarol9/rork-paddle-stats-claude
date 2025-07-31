@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
 import { Score } from '@/types';
-import { PlusCircle, Play, BarChart2, MapPin } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -35,7 +35,7 @@ export default function Dashboard() {
           </Text>
           
           <View style={styles.matchDetails}>
-            <MapPin size={14} color={colors.textLight} />
+            <Ionicons name="location" size={14} color={colors.textLight} />
             <Text style={styles.matchLocation}>{currentMatch.location}</Text>
             <Text style={styles.matchRound}>{currentMatch.round}</Text>
           </View>
@@ -50,7 +50,7 @@ export default function Dashboard() {
             style={styles.continueButton}
             onPress={() => router.push('/match-tracking')}
           >
-            <Play size={20} color="white" />
+            <Ionicons name="play" size={20} color="white" />
             <Text style={styles.buttonText}>Continue Match</Text>
           </TouchableOpacity>
         </View>
@@ -59,7 +59,7 @@ export default function Dashboard() {
           style={styles.newMatchButton}
           onPress={() => router.push('/new-match')}
         >
-          <PlusCircle size={24} color="white" />
+          <Ionicons name="add-circle" size={24} color="white" />
           <Text style={styles.newMatchText}>Start New Match</Text>
         </TouchableOpacity>
       )}
@@ -82,7 +82,7 @@ export default function Dashboard() {
                   {match.teams[0].players.map(p => p.name.split(' ')[0]).join('/')} vs {match.teams[1].players.map(p => p.name.split(' ')[0]).join('/')}
                 </Text>
                 <View style={styles.matchDetails}>
-                  <MapPin size={14} color={colors.textLight} />
+                  <Ionicons name="location" size={14} color={colors.textLight} />
                   <Text style={styles.matchLocation}>{match.location}</Text>
                   <Text style={styles.matchDate}>
                     {new Date(match.date).toLocaleDateString()}
@@ -94,7 +94,7 @@ export default function Dashboard() {
                 <Text style={styles.scoreText}>
                   {match.score.sets[0]}-{match.score.sets[1]}
                 </Text>
-                <BarChart2 size={16} color={colors.primary} />
+                <Ionicons name="bar-chart" size={16} color={colors.primary} />
               </View>
             </TouchableOpacity>
           ))

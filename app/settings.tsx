@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'rea
 import { Stack, useRouter } from 'expo-router';
 import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
-import { Shield, Trash2, Info, FileText, Mail, ArrowLeft } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Settings() {
   const router = useRouter();
@@ -48,7 +48,7 @@ export default function Settings() {
           title: 'Settings',
           headerLeft: () => (
             <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-              <ArrowLeft size={24} color={colors.primary} />
+              <Ionicons name="arrow-back" size={24} color={colors.primary} />
             </TouchableOpacity>
           ),
         }} 
@@ -68,7 +68,7 @@ export default function Settings() {
               style={styles.settingItem}
               onPress={handleAbout}
             >
-              <Info size={24} color={colors.primary} />
+              <Ionicons name="information-circle" size={24} color={colors.primary} />
               <View style={styles.settingContent}>
                 <Text style={styles.settingTitle}>About</Text>
                 <Text style={styles.settingDescription}>App version and information</Text>
@@ -79,7 +79,7 @@ export default function Settings() {
               style={styles.settingItem}
               onPress={handlePrivacyPolicy}
             >
-              <Shield size={24} color={colors.primary} />
+              <Ionicons name="shield-checkmark" size={24} color={colors.primary} />
               <View style={styles.settingContent}>
                 <Text style={styles.settingTitle}>Privacy Policy</Text>
                 <Text style={styles.settingDescription}>How we handle your data</Text>
@@ -91,7 +91,7 @@ export default function Settings() {
             <Text style={styles.sectionTitle}>Data Management</Text>
             
             <View style={styles.settingItem}>
-              <FileText size={24} color={colors.textLight} />
+              <Ionicons name="document-text" size={24} color={colors.textLight} />
               <View style={styles.settingContent}>
                 <Text style={styles.settingTitle}>Match History</Text>
                 <Text style={styles.settingDescription}>
@@ -104,7 +104,7 @@ export default function Settings() {
               style={styles.settingItem}
               onPress={handleClearAllData}
             >
-              <Trash2 size={24} color={colors.error} />
+              <Ionicons name="trash" size={24} color={colors.error} />
               <View style={styles.settingContent}>
                 <Text style={[styles.settingTitle, { color: colors.error }]}>Clear All Data</Text>
                 <Text style={styles.settingDescription}>Delete all match history</Text>
@@ -125,7 +125,7 @@ export default function Settings() {
                 );
               }}
             >
-              <Mail size={24} color={colors.primary} />
+              <Ionicons name="mail" size={24} color={colors.primary} />
               <View style={styles.settingContent}>
                 <Text style={styles.settingTitle}>Contact Support</Text>
                 <Text style={styles.settingDescription}>Get help or send feedback</Text>

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { colors } from '@/constants/colors';
-import { ArrowLeft, Mail } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function PrivacyPolicy() {
   const router = useRouter();
@@ -18,7 +18,7 @@ export default function PrivacyPolicy() {
           title: 'Privacy Policy',
           headerLeft: () => (
             <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-              <ArrowLeft size={24} color={colors.primary} />
+              <Ionicons name="arrow-back" size={24} color={colors.primary} />
             </TouchableOpacity>
           ),
         }} 
@@ -80,7 +80,7 @@ export default function PrivacyPolicy() {
               style={styles.contactButton}
               onPress={handleEmailPress}
             >
-              <Mail size={20} color={colors.primary} />
+              <Ionicons name="mail" size={20} color={colors.primary} />
               <Text style={styles.contactEmail}>karol.krawczynski4@gmail.com</Text>
             </TouchableOpacity>
           </View>

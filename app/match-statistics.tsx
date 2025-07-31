@@ -5,7 +5,7 @@ import { useMatchStore } from '@/stores/matchStore';
 import { colors } from '@/constants/colors';
 import ScoreDisplay from '@/components/ScoreDisplay';
 import StatisticsCard from '@/components/StatisticsCard';
-import { Download, MapPin, Trophy, ArrowLeft, Trash2 } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { generateMatchCSV, downloadCSV } from '@/utils/csvExport';
 
 export default function MatchStatistics() {
@@ -92,7 +92,7 @@ export default function MatchStatistics() {
           title: 'Match Statistics',
           headerLeft: () => (
             <TouchableOpacity onPress={handleBackToDashboard} style={styles.backButton}>
-              <ArrowLeft size={24} color={colors.primary} />
+              <Ionicons name="arrow-back" size={24} color={colors.primary} />
             </TouchableOpacity>
           ),
         }} 
@@ -104,11 +104,11 @@ export default function MatchStatistics() {
             <Text style={styles.title}>{matchTitle}</Text>
             <View style={styles.matchMetadata}>
               <View style={styles.metadataItem}>
-                <MapPin size={16} color={colors.textLight} />
+                <Ionicons name="location" size={16} color={colors.textLight} />
                 <Text style={styles.metadataText}>{match.location}</Text>
               </View>
               <View style={styles.metadataItem}>
-                <Trophy size={16} color={colors.textLight} />
+                <Ionicons name="trophy" size={16} color={colors.textLight} />
                 <Text style={styles.metadataText}>{match.round}</Text>
               </View>
             </View>
@@ -185,7 +185,7 @@ export default function MatchStatistics() {
               style={styles.downloadButton}
               onPress={handleDownloadCSV}
             >
-              <Download size={20} color="white" />
+              <Ionicons name="download" size={20} color="white" />
               <Text style={styles.downloadButtonText}>Download Match Data (CSV)</Text>
             </TouchableOpacity>
             
@@ -194,7 +194,7 @@ export default function MatchStatistics() {
                 style={styles.deleteButton}
                 onPress={handleDeleteMatch}
               >
-                <Trash2 size={20} color="white" />
+                <Ionicons name="trash" size={20} color="white" />
                 <Text style={styles.deleteButtonText}>Delete Match</Text>
               </TouchableOpacity>
             )}
