@@ -149,7 +149,7 @@ export default function NewMatch() {
             
             <View style={styles.scoringSystemContainer}>
               <View style={styles.scoringSystemHeader}>
-                <Ionicons name="target" size={20} color={colors.textLight} />
+                <Ionicons name="options" size={20} color={colors.textLight} />
                 <Text style={styles.scoringSystemTitle}>Scoring System</Text>
               </View>
               
